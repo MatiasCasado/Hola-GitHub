@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		#dropzone{
+			display: block;
+			width: 200px;
+			height: 200px;
+			border: 1px dotted black;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div id="dropzone"></div>
+	<br>
+	<img id="img" src="imagen1.jpg" width="350" height="125">
+
+	<script>
+		let html;
+		document.querySelector("#dropzone").
+			addEventListener("dragover", e=>{
+				e.stopPropagation();
+				e.preventDefault();
+				//console.log("dragovereando!");
+			});
+
+
+		document.querySelector("#dropzone").
+		addEventListener("drop", e=>{
+			e.dataTransfer
+			e.stopPropagation();
+			e.preventDefault();
+			console.log(e.dataTransfer.files);
+			console.log(e.dataTransfer.items);
+			console.log(URL.createObjectURL(e.dataTransfer.files[0]));
+			for(var i=0; i<e.dataTransfer.files.length;i++){
+				html+='<img src="'+URL.createObjectURL(e.dataTransfer.files[i])+'" width="75" height="75" />';
+			};
+			document.querySelector("#dropzone").innerHTML = html;
+
+		});
+		/*
+		document.querySelector("#img").addEventListener("drag", ()=>{
+			console.log("dragueando!");
+		});
+		*/
+
+	</script>
+
+</body>
+</html>
