@@ -1,0 +1,72 @@
+<!-- Dados las galerías de fotos del siguiente JSON, diseñar una aplicación que, pididendo un numero de usuario, muestre por consola las galerías de fotos asociados.
+
+URL: https://jsonplaceholder.typicode.com/albums
+
+
+Lvl 1. Usar prompt() para el ingreso de datos y alert() para la salida de datos.
+Lvl 2. Usar controles HTML para el ingreso de datos y un div para la salida de datos.
+Lvl 3. Usar controles HTML para el ingreso de datos y mostrar los datos en una tabla HTML. -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+</head>
+<body>
+
+	<div>Seleccione el id del usuario</div>
+	<select id="cboUsuarios"></select>
+	<button id="btnObtener">Obtener galerías</button>
+	<table id="tblGalerias"></table>
+	
+	<script>
+		window.addEventListener("load", () => {
+			// Cargar Select
+			fetch("https://jsonplaceholder.typicode.com/albums")
+			.then(respuesta => {return respuesta.json()})
+			.then(json => {
+				let ids = [];
+				let anterior = json[0].userId;
+				let htmlSelect = "";
+
+				ids.push(anterior);
+				json.forEach(album => {
+					if(album.userId != anterior) {
+						ids.push(album.userId);
+						anterior = album.userId;
+					}
+				});
+				ids.forEach(id => {
+					htmlSelect += '<option value="'+id+'">'+id+'</option>';
+				});
+				document.querySelector("#cboUsuarios").innerHTML = htmlSelect;
+			}) 
+			.catch(err => {console.log(err)})
+		});
+
+		document.querySelector("#btnObtener").addEventListener("click", loadTable);
+		document.querySelector("#cboUsuarios").addEventListener("change", loadTable);
+
+		function loadTable() {
+			const id = document.querySelector("#cboUsuarios").value;
+			
+			fetch("https://jsonplaceholder.typicode.com/albums")
+			.then(respuesta => {return respuesta.json()})
+			.then(json => {
+				let albums = [];
+				let htmlTabla = "<tr><td>ID</td><td>Titulo</td></tr>";
+				json.forEach(album => {
+					if(album.userId == id) {
+						albums.push(album);
+					}
+				});
+				albums.forEach(fila => {
+					htmlTabla += '<tr><td>'+fila.id+'</td><td>'+fila.title+'</td></tr>'
+				});
+				document.querySelector("#tblGalerias").innerHTML = htmlTabla;
+			})
+			.catch(err => {console.log(err)});
+		}
+	</script>
+</body>
+</html>
